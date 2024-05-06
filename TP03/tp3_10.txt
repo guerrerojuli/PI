@@ -1,0 +1,41 @@
+a)
+float x = 1/3;
+while(x != 0.52)
+		x += .01;
+
+// 0.52 no es representable como IEEE entonces la comparacion fallará siempre
+
+b)
+for(y = .1; y != 1.0; y+= .1)
+		printf("%f\n", y);
+
+// al pasar por numeros decimales no representables en IEEE la suma no terminará dando "redonda" entonces la comparacion siempre será verdadera
+
+c)
+int n = ... ;
+
+switch (n)
+{ 
+		case 1:   
+printf("El número es 1\n");
+		case 2: 
+printf("El número es 2\n");
+		 	break;
+		default:  
+printf("El número no es ni 1 ni 2\n");
+			break;
+	}
+
+//falta el break en el case 1
+
+d)
+int c, mayor;
+mayor = 0;
+while ( c = getchar() != EOF )
+{
+  if ( c > mayor )
+    mayor = c;
+}
+printf ("El mayor es %c\n",mayor)
+
+//falta parentesis en la asignación de c = getchar() ya que por el orden de precedencia primero se ejecutara la comparacion y luego a asignacion

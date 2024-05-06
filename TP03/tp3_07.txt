@@ -1,0 +1,1 @@
+Te dará como resultado la suma de todos los resultados dividido el ultimo valor

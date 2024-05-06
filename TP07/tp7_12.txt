@@ -1,0 +1,17 @@
+char *p[2][3] =  {{"abc","defg","hi"},{"jklmn","pqrstuvw","xyz"}};
+
+la declaracion ocupa lo que ocupe un puntero * 3 * 2
+
+Expresión         | Expresión Equivalente   | Valor
+***p              | p[0][0][0]              | 'a'
+**p[1]            | p[0][0][1]              | 'b'
+**(p[1]+2)        | p[1][2][0]              | 'x'
+*(*(p+1)+1)[7]    | (p[1]+1)[7][0]          |  ?
+(*(*(p+1)+1))[7]  | p[1][1][7]              | 'w'
+*(p[1][2]+2)      | p[1][2][2]              | 'z'
+
+
+
+
+
+

@@ -1,0 +1,5 @@
+a) el * está de más en la expresión *cPtr->figura
+b) debería escribirse corazones[9].figura
+c) los chars deben declararse al final del struct
+d) se debe declarar como "struct persona m"
+e) ?

@@ -1,0 +1,6 @@
+-- Crear container
+docker run -it --name PI -v .:/usr/PI gcc:latest
+
+-- Iniciar container
+docker start PI
+docker exec -it PI bash

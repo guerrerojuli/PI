@@ -1,0 +1,6 @@
+a) puntero a 10
+b) puntero a 30
+c) 10
+d) 12
+e) 30
+f) suponiendo que un int ocupa 4 bytes, x[4] se encuentra almacenado 10F0 + 4*4 = 1100

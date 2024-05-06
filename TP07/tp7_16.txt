@@ -1,0 +1,17 @@
+supongo un puntero ocupa 2 bytes
+$2004 *"rojo"
+$2006 *"verde"
+$2008 *"azul"
+$200A *"blanco"
+$200C *"negro"
+$200E *"amarillo"
+
+b) referecia a la direccion de inicio del arreglo, es decir a la direccion del puntero que lleva a la palabra "rojo"
+c) referencia a la direccion del tercer elemento del arreglo, es decir a la direccion del puntero que lleva a la palabra "azul"
+d) referencia al valor del primer elemento, es decir al puntero que lleva a la palabra "rojo"
+e) referencia al valor del tercer elemento, es decir al puntero que lleva a la palabra "azul"
+f) en que uno esta con notacion de vectores y la otra con notacion de punteros
+g) se referencia a la primer letra de la primer palabra, es decir 'r'
+h) se referencia a la primer letra de la primer palabra, es decir 'r'
+i) se referencia a la primer letra de la primer palabra y se le suma 2, es decir 'r' + 2, es decir 't' 
+

@@ -1,0 +1,2 @@
+a) el arreglo desaparece al terminar la funcion, deberia crearse un vector con malloc
+b) el i -- esta mal

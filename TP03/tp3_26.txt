@@ -1,0 +1,52 @@
+a)
+int a = getint("Ingrese un número entero:");
+if ( a > 0 )
+    printf("Es mayor que cero\n");
+else if ( a < 0 )
+    printf("Es menor que cero\n");
+else 
+   printf("Es igual a cero\n");
+
+b)
+int a = !( b > 0 );
+
+c)
+int a = 0;
+while(a < 10) {
+   f(a);   // f es una función
+   a = a + 1;
+}
+
+d)
+a = b > 0;
+
+e)
+if ( a > 0 && b < 0 )
+  c = 10;
+else
+  c = 20;
+
+f)
+int a = 10;
+for (int i =0; i < 10; i++)
+   a += getint("");
+printf("El valor de a es %d\n", a);
+
+g)
+int suma = getint("Ingrese la base");
+for(int i = 0; i < 100; i++)
+  suma += i;
+printf("La suma es %d\n", a);
+
+h)
+int cant = 0;
+for(int i=0; i<dim; i++){
+  if(!i){
+    last=v[i];
+    cant++;
+  }
+  if(last != v[i]){
+    last = v[i];
+    cant++;
+  }
+}

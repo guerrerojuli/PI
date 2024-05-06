@@ -1,0 +1,4 @@
+falso, para que un programa realice saltos de linea necesita imprimir el caracter '\n', sino imprime todo en una misma linea.
+verdadero, no se puede obtener el resto (modulo) de un numero decimal
+verdadero
+falso, puede tener un unico llamado a printf pero en el string imprimir dos veces el caracter '\n' generando saltos de linea

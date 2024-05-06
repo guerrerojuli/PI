@@ -1,0 +1,6 @@
+a) se esta intentando acceder a un puntero que es basura o NULL, debe inicializarse el puntero
+b) se esta intentando asignar una variable int a una tipo int*. Solciones *x = y, x = &y, int *x, *y
+c) se pierde la refernecia al la palabra, deberia inicializarse otro puntero char* aux = s en el ciclo y trabajaron con el mismo
+d) supongo que se estaba intentando desreferenciar un punterio void, lo que es incorrecto, se deberia castear el puntero a (int *)
+e) se esta intentando acceder a un puntero que es basura o NULL, debe inicializarse el puntero
+f) se esta intentando ahcer free del puntero s pero realloc ya lo hace por su cuenta

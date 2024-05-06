@@ -1,0 +1,43 @@
+a)
+int a = 0;
+while (a <= 4){
+  resultado += a;
+  a++;
+}
+
+b)
+if ( sueldo >= 1000);
+  printf ( "El sueldo es mayor o igual a 1.000\n");
+else
+  printf ("El sueldo es menor a 1.000\n");
+  
+c)	
+int var1 = 1, var2;
+while (var1 <= 8) {
+  var2 += var1;
+	++var1;
+}
+
+d)
+while ('Y' ! = (c= getchar())) 
+  printf ("Pulse Y para abandonar este ciclo \n");
+
+e) 	
+int c;
+while((c = getchar()) != EOF)
+	putchar(c);
+
+f)
+enum dias { LUN, MAR, MIE, JUE, VIE, SAB, DOM};
+
+enum dias dia = LUN;
+switch(dia) {
+  case LUN: printf("Hoy es %s", "lunes"); break;
+  case MAR: printf("Hoy es %s", "martes"); break;
+  case MIE: printf("Hoy es %s", "miercoles"); break;
+  case JUE: printf("Hoy es %s", "jueves"); break;
+  case VIE: printf("Hoy es %s", "viernes"); break;
+  case SAB: printf("Hoy es %s", "sabado"); break;
+  case DOM: printf("Hoy es %s", "domingo"); break;
+  default: printf("Hoy no es un dia :("};
+}

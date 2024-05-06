@@ -1,0 +1,32 @@
+a)
+for ( i = 46; i <= 'H'; i++)
+{
+      printf("%d %c %c\t", i, i, tolower(i));
+      printf("%s ", isalnum(i)? "si" : "no");
+      printf("%s ", isalpha(i)? "si" : "no");
+      printf("%s ", isdigit(i)? "si" : "no");
+      printf("%s ", islower(i)? "si" : "no");
+      printf("%s ", isupper(i)? "si" : "no");
+      printf("%s ", isxdigit(i)? "si" : "no");
+      printf("%s ", iscntrl(i)? "si" : "no");
+      printf("%s \n", ispunct(i)? "si" : "no");
+}
+"valor de i" "ascii con valor i" "si está entre las mayusculas imprime la minuscula, sino imprime el ascii de i"
+"devuelve "si" si i es un ascii alfanumerico sino devulve "no""
+"devuelve "si" si i es un ascii una letra sino devulve "no""
+"devuelve "si" si i es un ascii un numero sino devulve "no""
+"devuelve "si" si i es un ascii una letra minuscula sino devulve "no""
+"devuelve "si" si i es un ascii una letra mayusculas sino devulve "no""
+"devuelve "si" si i es un ascii un numero hexadecimal sino devulve "no""
+"devuelve "si" si i es un ascii un control sino devulve "no""
+"devuelve "si" si i es un ascii un caracter de puntuacion sino devulve "no""
+
+b)
+for ( x = -1; x < 2; x += 0.5 )
+{
+	printf("%f  %f   %f   %f\n", x, fabs(x), ceil(x), floor(x));
+	printf("%f  %f\n", pow(x,2), pow(x,.5));
+}
+
+"valor de x" "valor absoluto de x" "redondeo hacia arriba de x" "redondeo hacia abajo de x"
+"potencia de 2 de x" "raiz cuadrada de x"

@@ -1,0 +1,45 @@
+a)
+void
+f1 (void) 
+{
+ printf ("Dentro de la función f1\n");
+}
+
+void
+f2(void) 
+{
+ 		printf ("Dentro de f2\n");
+}
+
+b)
+int
+suma (int x, int y)
+{
+  return x + y;
+}
+
+c)
+int
+suma (int n);
+{
+	if (n<=0)
+		return 0;
+	else
+		return n + 1;
+}
+
+d)
+void
+f2( float a )
+{
+  printf ("%f\n",a*a);
+}
+
+e)
+void
+f3 ( int letra )
+{
+	printf('Letra: ');
+	putchar(letra);
+	putchar('\n');
+}

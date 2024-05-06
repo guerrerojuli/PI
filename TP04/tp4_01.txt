@@ -1,0 +1,8 @@
+a) No se sabe porque aumento una variable a la vez que la estoy sumando. No sé que se ejecuta primero.
+b) No se sabe porque aumento una variable a la vez que la estoy sumando. No sé que se ejecuta primero.
+c) b=64, c=125
+d)
+  b = No se sabe porque aumento una variable a la vez que la estoy sumando. No sé que se ejecuta primero.
+  c = No se sabe porque aumento una variable a la vez que la estoy sumando. No sé que se ejecuta primero.
+  e = 64
+  f = 64

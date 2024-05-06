@@ -1,0 +1,11 @@
+a) true, ya que la forma en la que C maneja los caracteres almacenando el codigo ASCII del mismo en un byte. Al hacer la transformacion a int el valor numerico sigue siendo identico por lo que no se modifica.
+b) false, en el primer codigo se realiza la operacion en forma decimal, dando como resultado 5/3, mientras que en el segundo codigo se realiza la operacion de forma entera dando como resultado 3 y luego se convierte a decimal terminando con el valor 3.0.
+c) true, en el primer codigo se realiza la operacion de forma decimal ya que 3.0 es decimal y en el segundo codigo se realiza la operacion de forma decimal ya que la variable y está cateada a float.
+d) true, en el primer codigo se realiza la operacion 5/3 dando como resultado 1.6 y siendo truncado a 1 mientras que en el segundo codigo se realiza la misma operacion. siempre se realiza la operacion como enteros porque siempre uno de los operandos es enteros.
+e) false, en el primer codigo se realiza la operacion como double pero es almacenando como int por lo que el resultado es 25. En cambio en el otro codigo se realiza la misma operacion pero es almacenado como float, dando como resultado 25.0.
+f) true, el lenguaje de programacion C hace automaticamente la conversion de char y float a int, dando el mismo resultado.
+g) falso, el primer programa da overflow mientras el segundo no.
+h) true, es igual, ya que sin importar si el char es signed, el numero 120 entra.
+i) false, depende de la arquitecutra del computador el char del primer programa sera signed o no por lo que hya casos donde dara overflow siendo distinto al segundo programa.
+j) false, al castear el numero 300 a char, este da overflow y pasa a representar otro numero, siendo diferente asi al segundo programa.
+k) true, la asignacion retorna el valor asignado y el codigo es ejecutado de izquierda a derecha por lo que x estará asignado.

@@ -1,0 +1,20 @@
+int * arr;
+
+1)
+int i;
+arr = malloc(TAM*sizeof(int));
+for (i = 0; i < TAM; i++)
+  arr[i] = 0;
+mostrarArreglo(arr,TAM);
+free(arr);
+
+
+2)
+arr = NULL;
+arr = realloc(arr, TAM*sizeof(int));
+for (i = 0; i < TAM; i++)
+  arr[i] = 0;
+
+
+3)
+arr =  calloc(TAM, sizeof(int));

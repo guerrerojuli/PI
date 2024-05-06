@@ -1,0 +1,3 @@
+a) el setido de la misma es agregar todos los prototipos de las funciones que se encuentran en func de forma que no se haga una suposicion por parte del compilador sobre sus tipos.
+b) no tiene sentido.
+c) gcc archivo1.c archivo2.c -o archivos

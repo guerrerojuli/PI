@@ -1,0 +1,4 @@
+a) imprime v a partir del segundo elemento y v apartir del primero ya que toupper de un no alfabetico retorna el mismo caracter
+b) da error por intentar modificar una zona constante de la memoria (text data)
+c) imprime p a aprtir de la 'l' y desde el inicio, todo en mayusculas
+d) da error porque se esta asignando el retorno de realloc a una copia del puntero, entonces este no se actualiza
