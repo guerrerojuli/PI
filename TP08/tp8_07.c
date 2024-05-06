@@ -5,6 +5,9 @@
 
 #define COLS 7
 #define FILS 6
+#define N_DIRS 8
+#define VALID_POSITION(fil, col)                                               \
+  ((fil) < FILS && (fil) >= 0 && (col) < COLS && (col) >= 0)
 
 typedef enum { DER = 0, IZQ, ABA, ARR, I_AR, I_AB, D_AR, D_AB } Tdireccion;
 
@@ -20,16 +23,59 @@ struct posicion {
 //       en esta prueba asumimos que se recorre el diccionario, y cada palabra
 //       se busca en la sopa de letras.
 //.      Si en vez de hacerlo así recorren la matriz y por cada letra buscan si
-//hay una palabra en el diccionario
+// hay una palabra en el diccionario
 //       que empiece con esa letra, tienen que cambiar el testeo para que
 //       coincida con el orden en que se encuentran.
+
+struct posicion encontrarPalabra(char *palabra, size_t fila, size_t columna,
+                                 char matriz[FILS][COLS]) {
+  static int dirs[][2] = {{1, 0},  {-1, 0},  {0, -1}, {0, 1},
+                          {-1, 1}, {-1, -1}, {1, 1},  {1, -1}};
+  struct posicion p;
+  char encontrado = 0;
+  int i;
+  for (i = 0; i < N_DIRS && !encontrado; i++) {
+    int j, filaAux = fila, columnaAux = columna;
+    for (j = 0; VALID_POSITION(filaAux, columnaAux) && palabra[j] &&
+                palabra[j] == matriz[filaAux][columnaAux];
+         j++, filaAux += j * dirs[i][1], columnaAux += j * dirs[i][0])
+      ;
+    if (palabra[j] == '\0') {
+      encontrado = 1;
+    }
+  }
+  p.palabra = palabra;
+  p.fila = fila;
+  p.columna = columna;
+  if (encontrado)
+    p.direccion = i;
+  else
+    p.direccion = -1;
+  return p;
+}
 
 struct posicion *resolverSopa(char *diccionario[], char matriz[FILS][COLS]) {
   int dimAux = 10, dim = 0;
   struct posicion *res = malloc(dimAux * sizeof(*res));
-  for (int i = 0; *diccionario[i]; i++) {
-    for (int j = 0; 
+  for (int i = 0; i < FILS; i++)
+    for (int j = 0; j < COLS; j++) {
+      for (int z = 0; diccionario[z][0]; z++) {
+        struct posicion p = encontrarPalabra(diccionario[z], i, j, matriz);
+        if (p.direccion != -1) {
+          if (dim == dimAux) {
+            dimAux <<= 1;
+            res = realloc(res, dimAux * sizeof(*res));
+          }
+          res[dim++] = p;
+        }
+      }
+    }
+  if (dim == dimAux) {
+    dimAux <<= 1;
+    res = realloc(res, dimAux * sizeof(*res));
   }
+  res[dim++].palabra = NULL;
+  printf("%d\n", dim);
   return realloc(res, dim * sizeof(*res));
 }
 
@@ -48,6 +94,7 @@ int main(void) {
   int count = 0;
   while (res[count].palabra != NULL)
     printf("%s\n", res[count++].palabra);
+  printf("%d %d\n", count, expected);
   assert(count == expected);
 
   assert(strcmp(res[0].palabra, "ARRE") == 0);
