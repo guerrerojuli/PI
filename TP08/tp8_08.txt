@@ -1,0 +1,8 @@
+a) No sirve ya que este struct permite almacenar 21 punteros a char
+b) No sirve, no se pueden crear vectores dinamicos en un struct 
+c) Sirve
+d) Sirve
+e) Sirve (El ultimo elemento será un puntero a "")
+f) No sirve, se está guardando unicamente un puntero a un string
+g) Sirve
+h) No sirve, es un arreglo de punteros a punteros
