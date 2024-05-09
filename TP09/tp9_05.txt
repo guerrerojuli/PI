@@ -1,0 +1,1 @@
+No funciona si se pasa un impar a la funcion es par o un par a la funcion impar
