@@ -2,11 +2,12 @@
 #include <assert.h>
 
 int apareados(const char *texto) {
-  int dim = 0;
-  for(int i = 0; texto[i]; i++)
-    dim++;
-  if (dim <= 2)
-    return 1;
+  if (!*texto)
+    return 0;
+  int res = apareados(texto + 1);
+  if (res > 0) // Si en algun momento quedó positivo es porque encontro un ( que no fue cerrado antes
+    return res;
+  return (*texto == '(') - (*texto == ')') + res;
 }
 
 int main(void) {
