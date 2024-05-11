@@ -2,7 +2,14 @@
 #include <assert.h>
 
 int sumMatch(const int v[]) {
-
+  if (*v == -1)
+    return 0;
+  int aux = sumMatch(v + 1);
+  if (aux < 0)
+    return -1;
+  if (!aux)
+    return *v;
+  return aux - *v;
 }
 
 int main(void) {
