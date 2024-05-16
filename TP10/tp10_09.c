@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <assert.h>
 #include <stdlib.h>
-#include "utillist.h"
+#include "../utillist.h"
 
 typedef struct nodeBrief * TListBrief; 
 
@@ -12,7 +12,20 @@ typedef struct nodeBrief {
 } TNodeBrief;
 
 
-TListBrief comprimeList(const TList list);
+TListBrief comprimeList(const TList list) {
+  if (list == NULL)
+    return NULL;
+  TListBrief aux = comprimeList(list->tail);
+  if (aux == NULL || aux->elem != list->elem) {
+    TNodeBrief *node = malloc(sizeof(*node));
+    node->elem = list->elem;
+    node->count = 1;
+    node->tail = aux;
+    return node;
+  }
+  aux->count++;
+  return aux;
+}
 
 // Auxiliar para que pase el test con sanitizer
 void freeListBrief(TListBrief lb) {
