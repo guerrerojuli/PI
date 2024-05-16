@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <assert.h>
 #include "../utillist.h"
+#include <assert.h>
+#include <stdio.h>
 
 int sumAll(const TList list) {
-  if(!list)
+  if (!list)
     return 0;
   return list->elem + sumAll(list->tail);
 }
@@ -16,40 +16,39 @@ int odds1(const TList list) {
 }
 
 // Version donde la lista vacia retorna cero
-int odds2(const TList list){
-  if(!list)
+int odds2(const TList list) {
+  if (!list)
     return 0;
   if (!list->tail)
     return 1;
   return (list->elem % 2) && odds2(list->tail);
 }
 
-int 
-main(void) {
+int main(void) {
 
-	assert(sumAll(NULL) == 0);
-	assert(odds1(NULL) == 1 );
-	assert(odds2(NULL) == 0 );
+  assert(sumAll(NULL) == 0);
+  assert(odds1(NULL) == 1);
+  assert(odds2(NULL) == 0);
 
-	int v [] = {1, 3, 5, -1, 0, 2, 4, 3};
-	TList l1 = fromArray(v, 8);
-	assert(sumAll(l1) == 17);
-	assert(odds1(l1) == 0);
-	assert(odds2(l1) == 0);
-	freeList(l1);
+  int v[] = {1, 3, 5, -1, 0, 2, 4, 3};
+  TList l1 = fromArray(v, 8);
+  assert(sumAll(l1) == 17);
+  assert(odds1(l1) == 0);
+  assert(odds2(l1) == 0);
+  freeList(l1);
 
-	l1 = fromArray(v, 4);
-	assert(sumAll(l1) == 8);
-	assert(odds1(l1) == 1);
-	assert(odds2(l1) == 1);
-	freeList(l1);
+  l1 = fromArray(v, 4);
+  assert(sumAll(l1) == 8);
+  assert(odds1(l1) == 1);
+  assert(odds2(l1) == 1);
+  freeList(l1);
 
-	l1 = fromArray(v+4, 3);
-	assert(sumAll(l1) == 6);
-	assert(odds1(l1) == 0);
-	assert(odds2(l1) == 0);
-	freeList(l1);
-	
-	puts("OK!");
-	return 0;
+  l1 = fromArray(v + 4, 3);
+  assert(sumAll(l1) == 6);
+  assert(odds1(l1) == 0);
+  assert(odds2(l1) == 0);
+  freeList(l1);
+
+  puts("OK!");
+  return 0;
 }
