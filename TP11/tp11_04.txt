@@ -1,0 +1,3 @@
+a) double *(*p[]) (void)
+b) int **p (char *)
+c) int *(*p[N]) (int)
