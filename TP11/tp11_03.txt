@@ -1,0 +1,8 @@
+a) es un puntero a funcion que recibe un puntero a un arreglo de ints y retorna un puntero a int
+b) arreglo de 10 punteros a int
+c) puntero a un arreglo de 10 ints
+d) prototipo de una funcion que no recibe parametros y que retorna un puntero a int
+e) invocación a una funcion pasando como parametro un puntero a char (posiblemente un string)
+f) prototipo de una funcion que recibe por parametro un puntero a chary que retorna un puntero a int
+DBPP
+

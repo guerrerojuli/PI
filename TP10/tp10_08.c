@@ -7,12 +7,12 @@ TList listUnion(const TList list1, const TList list2) {
   if (list1 == NULL && list2 == NULL)
     return NULL;
   TNode *node = malloc(sizeof(*node));
-  if (list2 != NULL && (list1 == NULL || list1->elem > list2->elem)) {
+  if (list1 == NULL || (list2 != NULL && list1->elem > list2->elem)) {
     node->elem = list2->elem;
     node->tail = listUnion(list1, list2->tail);
     return node;
   }
-  if (list1 != NULL && (list2 == NULL || list1->elem < list2->elem)) {
+  if (list2 == NULL || list1->elem < list2->elem) {
     node->elem = list1->elem;
     node->tail = listUnion(list1->tail, list2);
     return node;
