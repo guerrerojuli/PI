@@ -33,7 +33,7 @@ size_t put(vectorADT v, elemType *elems, size_t dim, size_t index) {
   size_t start = (oldSize < index) ? oldSize : index; // para arrancar apartir de donde necesito
   size_t indexFromStart = index - start;
   size_t countCopied = 0;
-  for (int i = start, j = 0; i < v->allocSize && countCopied < dim; i++, j++) {
+  for (int i = start, j = 0; i < index + dim; i++, j++) {
     // significa que no arrancó la parte de copiar pero estoy en una parte nueva
     if (i >= oldSize && j < indexFromStart)
       v->vec[i] = NULL;
