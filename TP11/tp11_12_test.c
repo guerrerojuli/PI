@@ -26,7 +26,6 @@ int main(void) {
   char **juanFriends =
       related(soc, "juan"); // juanFriends es {"ana", "juana", "pedro", NULL};
   assert(!strcmp(juanFriends[0], "ana") && !strcmp(juanFriends[1], "juana"));
-  putchar('\n');
   assert(!strcmp(juanFriends[2], "pedro") && juanFriends[3] == NULL);
   for (int i = 0; juanFriends[i] != NULL; i++)
     free(juanFriends[i]);

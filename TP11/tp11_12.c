@@ -8,7 +8,7 @@
 
 typedef struct relatedNode {
   struct relatedNode *tail;
-  char name[NAME_SIZE];
+  char name[NAME_SIZE + 1];
 } tRelated;
 
 typedef tRelated* tRelatedList; 
@@ -17,7 +17,7 @@ typedef struct personNode {
   struct personNode *tail;
   tRelatedList related;
   size_t relatedSize;
-  char name[NAME_SIZE];
+  char name[NAME_SIZE + 1];
 } tPerson;
 
 typedef tPerson *tPersonList;
@@ -54,13 +54,13 @@ void addPerson(socialADT soc, const char *name) {
 void addRelated(socialADT soc, const char *name, const char *related) {
   tPerson *person = searchPerson(soc->persons, name);
   if (person == NULL) return;
-  person->related = addRelatedRec(person->related, name, &person->relatedSize);
+  person->related = addRelatedRec(person->related, related, &person->relatedSize);
 }
 
 char **related(const socialADT soc, const char *person) {
   tPerson *p = searchPerson(soc->persons, person);
   if (p == NULL) 
-    return calloc(1, sizeof(void *));
+    return calloc(1, sizeof(char *));
   char **relatedVec = malloc((p->relatedSize + 1) * sizeof(*relatedVec));
   fillRelatedVec(p->related, relatedVec, p->relatedSize);
   return relatedVec;
@@ -101,7 +101,7 @@ static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *p
   // Logica repetida, usar funcion
   if (persons == NULL) {
     tPerson *newPerson = calloc(1, sizeof(*newPerson));
-    strcpy(newPerson->name, name);
+    strncpy(newPerson->name, name, NAME_SIZE);
     newPerson->tail = persons;
     *personsSize += 1;
     return newPerson;
@@ -109,7 +109,7 @@ static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *p
   int cmp = alfaCmp(persons->name, name);
   if (cmp > 0) {
     tPerson *newPerson = calloc(1, sizeof(*newPerson));
-    strcpy(newPerson->name, name);
+    strncpy(newPerson->name, name, NAME_SIZE);
     newPerson->tail = persons;
     *personsSize += 1;
     return newPerson;
@@ -136,7 +136,7 @@ static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t
   // Logica repetida, extraer en funcion aparte
   if (related == NULL) {
     tRelated *newRelated = calloc(1, sizeof(*newRelated));
-    strcpy(newRelated->name, name);
+    strncpy(newRelated->name, name, NAME_SIZE);
     newRelated->tail = related;
     *relatedSize += 1;
     return newRelated;
@@ -144,7 +144,7 @@ static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t
   int cmp = alfaCmp(related->name, name);
   if (cmp > 0) {
     tRelated *newRelated = calloc(1, sizeof(*newRelated));
-    strcpy(newRelated->name, name);
+    strncpy(newRelated->name, name, NAME_SIZE);
     newRelated->tail = related;
     *relatedSize += 1;
     return newRelated;
@@ -158,7 +158,7 @@ static void fillRelatedVec(tRelatedList relatedList, char** relatedVec, size_t r
     *relatedVec = NULL;
     return;
   }
-  puts(relatedList->name);
+  *relatedVec = malloc((NAME_SIZE + 1) * sizeof(**relatedVec));
   strcpy(*relatedVec, relatedList->name);
   fillRelatedVec(relatedList->tail, relatedVec + 1, relatedSize - 1);
 }
@@ -168,6 +168,7 @@ static void fillPersonsVec(tPersonList personsList, char** personsVec, size_t pe
     *personsVec = NULL;
     return;
   }
+  *personsVec = malloc((NAME_SIZE + 1) * sizeof(**personsVec));
   strcpy(*personsVec, personsList->name);
   fillPersonsVec(personsList->tail, personsVec + 1, personsSize - 1);
 }
