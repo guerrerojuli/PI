@@ -1,83 +1,173 @@
 #include "tp11_12.h"
 #include <stdlib.h>
 #include <string.h>
+#include <stdio.h>
 #define NAME_SIZE 20
 
-typedef struct socialCDT {
-  char* name;
-  char **friends;
-  size_t friendsSize;
-  size_t friendsAllocSize;
-  struct socialCDT *tail;
-} person;
+//NO ANDA
 
-static person *createPerson(const char *name);
-static person *addPersonRec(socialADT soc, const char *name);
+typedef struct relatedNode {
+  struct relatedNode *tail;
+  char name[NAME_SIZE];
+} tRelated;
+
+typedef tRelated* tRelatedList; 
+
+typedef struct personNode {
+  struct personNode *tail;
+  tRelatedList related;
+  size_t relatedSize;
+  char name[NAME_SIZE];
+} tPerson;
+
+typedef tPerson *tPersonList;
+  
+
+struct socialCDT {
+  tPersonList persons;
+  size_t personsSize;
+}; 
+
+static int alfaCmp(const char *name1, const char *name2);
+static void freeRelated(tRelatedList related);
+static void freePersons(tPersonList persons);
+static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize);
+static tPerson *searchPerson(tPersonList persons, const char *name);
+static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t *relatedSize);
+static void fillRelatedVec(tRelatedList relatedList, char** relatedVec, size_t relatedSize);
+static void fillPersonsVec(tPersonList personsList, char** personsVec, size_t personsSize);
 
 socialADT newSocial() {
-  return NULL;
+ socialADT soc = calloc(1, sizeof(*soc)); 
+ return soc;
 }
 
 void freeSocial(socialADT soc) {
-  if (soc == NULL)
-    return;
-  freeSocial(soc->tail);
+  freePersons(soc->persons);
   free(soc);
 }
 
 void addPerson(socialADT soc, const char *name) {
-  soc = addPersonRec(soc, name);
+   soc->persons = addPersonRec(soc->persons, name, &soc->personsSize); 
+}
+
+void addRelated(socialADT soc, const char *name, const char *related) {
+  tPerson *person = searchPerson(soc->persons, name);
+  if (person == NULL) return;
+  person->related = addRelatedRec(person->related, name, &person->relatedSize);
+}
+
+char **related(const socialADT soc, const char *person) {
+  tPerson *p = searchPerson(soc->persons, person);
+  if (p == NULL) 
+    return calloc(1, sizeof(void *));
+  char **relatedVec = malloc((p->relatedSize + 1) * sizeof(*relatedVec));
+  fillRelatedVec(p->related, relatedVec, p->relatedSize);
+  return relatedVec;
+}
+
+char **persons(const socialADT soc) {
+  if (soc->persons == NULL) 
+    return calloc(1, sizeof(void *));
+  char **personsVec = malloc((soc->personsSize + 1) * sizeof(*personsVec));
+  fillPersonsVec(soc->persons, personsVec, soc->personsSize);
+  return personsVec;
 }
 
 static int alfaCmp(const char *name1, const char *name2) {
-  int vaPrimero = 0; //Spanglish como corresponde ;)
-  for (int i = 0; !vaPrimero && !*name1; i++)
-    vaPrimero = *name1 - *name2;
-  return  vaPrimero;
+  if (*name1 != *name2)
+    return (*name1 - *name2);
+  if (!*name1)
+    return 0;
+  return alfaCmp(name1 + 1, name2 + 1);
 }
 
-static person *createPerson(const char *name) {
-    person *p = calloc(1, sizeof(*p));
-    p->name = malloc(NAME_SIZE * sizeof(*p->name));
-    strcpy(p->name, name);
-    return p;
+static void freeRelated(tRelatedList related) {
+  if (related == NULL)
+    return;
+  freeRelated(related->tail);
+  free(related);
 }
 
-static person *addPersonRec(socialADT soc, const char *name) {
-  if (soc == NULL) {
-    return createPerson(name);
+static void freePersons(tPersonList persons) {
+  if (persons == NULL)
+    return;
+  freePersons(persons->tail);
+  freeRelated(persons->related);
+  free(persons);
+}
+
+static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize) {
+  // Logica repetida, usar funcion
+  if (persons == NULL) {
+    tPerson *newPerson = calloc(1, sizeof(*newPerson));
+    strcpy(newPerson->name, name);
+    newPerson->tail = persons;
+    *personsSize += 1;
+    return newPerson;
   }
-  int vaPrimero = alfaCmp(soc->name, name);
-  if (vaPrimero > 0) {
-    person *p = createPerson(name);
-    p->tail = soc;
-    return p;
+  int cmp = alfaCmp(persons->name, name);
+  if (cmp > 0) {
+    tPerson *newPerson = calloc(1, sizeof(*newPerson));
+    strcpy(newPerson->name, name);
+    newPerson->tail = persons;
+    *personsSize += 1;
+    return newPerson;
   }
-  if (vaPrimero < 0)
-    return addPersonRec(soc->tail, name);
-  return soc;
-  
+  if (cmp < 0){
+    persons->tail = addPersonRec(persons->tail, name, personsSize);
+  }
+  return persons;
 }
 
-/* Si existe una persona con ese nombre, agrega la nueva relación
-** Si la persona no existe, no hace nada
-** Si related ya estaba relacionado, lo agrega repetido
-** Almacena una copia de related, no simplemente el puntero
-**
-*/
-void addRelated(socialADT soc, const char *name, const char *related);
+static tPerson *searchPerson(tPersonList persons, const char *name) {
+  if (persons == NULL)
+    return NULL;
+  int cmp = alfaCmp(persons->name, name);
+  if (cmp > 0) {
+    return NULL;
+  }
+  if (cmp < 0)
+    return searchPerson(persons->tail, name);
+  return persons;
+}
 
-/* Retorna una copia de los nombres relacionados con una persona
-** en orden alfabético.
-** Para marcar el final, después del último nombre se coloca NULL
-** Si la persona no existe, retorna un vector que sólo tiene a NULL como
-** elemento
-*/
-char **related(const socialADT soc, const char *person);
+static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t *relatedSize) {
+  // Logica repetida, extraer en funcion aparte
+  if (related == NULL) {
+    tRelated *newRelated = calloc(1, sizeof(*newRelated));
+    strcpy(newRelated->name, name);
+    newRelated->tail = related;
+    *relatedSize += 1;
+    return newRelated;
+  } 
+  int cmp = alfaCmp(related->name, name);
+  if (cmp > 0) {
+    tRelated *newRelated = calloc(1, sizeof(*newRelated));
+    strcpy(newRelated->name, name);
+    newRelated->tail = related;
+    *relatedSize += 1;
+    return newRelated;
+  }
+  related->tail = addRelatedRec(related->tail, name, relatedSize);
+  return related;
+}
 
-/* Retorna una copia de los nombres de las personas en orden alfabético.
-** Para marcar el final, después del último nombre se coloca NULL
-** Si no hay personas, retorna un vector que sólo tiene a NULL como
-** elemento
-*/
-char **persons(const socialADT soc);
+static void fillRelatedVec(tRelatedList relatedList, char** relatedVec, size_t relatedSize) {
+  if (relatedSize == 0) {
+    *relatedVec = NULL;
+    return;
+  }
+  puts(relatedList->name);
+  strcpy(*relatedVec, relatedList->name);
+  fillRelatedVec(relatedList->tail, relatedVec + 1, relatedSize - 1);
+}
+
+static void fillPersonsVec(tPersonList personsList, char** personsVec, size_t personsSize) {
+  if (personsSize == 0) {
+    *personsVec = NULL;
+    return;
+  }
+  strcpy(*personsVec, personsList->name);
+  fillPersonsVec(personsList->tail, personsVec + 1, personsSize - 1);
+}
