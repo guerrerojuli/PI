@@ -95,22 +95,19 @@ static tPerson *searchPerson(tPersonList persons, const char *name) {
 }
 
 static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize) {
-  int cmp;
-  if (persons == NULL || (cmp = strcmp(persons->name, name)) > 0) {
+  if (persons == NULL || strcmp(persons->name, name) > 0) {
     tPerson *newPerson = calloc(1, sizeof(*newPerson));
     strncpy(newPerson->name, name, NAME_SIZE);
     newPerson->tail = persons;
     *personsSize += 1;
     return newPerson;
   }
-  if (cmp < 0)
-    persons->tail = addPersonRec(persons->tail, name, personsSize);
+  persons->tail = addPersonRec(persons->tail, name, personsSize);
   return persons;
 }
 
 static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t *relatedSize) {
-  int cmp;
-  if (related == NULL || (cmp = strcmp(related->name, name)) > 0) {
+  if (related == NULL || strcmp(related->name, name) > 0) {
     tRelated *newRelated = calloc(1, sizeof(*newRelated));
     newRelated->tail = related;
     strncpy(newRelated->name, name, NAME_SIZE);
