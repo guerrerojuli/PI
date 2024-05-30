@@ -28,8 +28,6 @@ struct socialCDT {
 static void freeRelated(tRelatedList related);
 static void freePersons(tPersonList persons);
 static tPerson *searchPerson(tPersonList persons, const char *name);
-static tPerson*insertNewPerson(const char *name, tPersonList persons, size_t *personsSize);
-static tRelated *insertNewRelated(const char *name, tRelatedList related, size_t *relatedSize);
 static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize);
 static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t *relatedSize);
 static void fillRelatedVec(tRelatedList relatedList, char** relatedVec, size_t relatedSize);
@@ -88,50 +86,37 @@ static void freePersons(tPersonList persons) {
 }
 
 static tPerson *searchPerson(tPersonList persons, const char *name) {
-  if (persons == NULL)
-    return NULL;
-  int cmp = strcmp(persons->name, name);
-  if (cmp > 0)
+  int cmp;
+  if (persons == NULL || (cmp = strcmp(persons->name, name)) > 0)
     return NULL;
   if (cmp < 0)
     return searchPerson(persons->tail, name);
   return persons;
 }
 
-static tPerson*insertNewPerson(const char *name, tPersonList persons, size_t *personsSize) {
+static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize) {
+  int cmp;
+  if (persons == NULL || (cmp = strcmp(persons->name, name)) > 0) {
     tPerson *newPerson = calloc(1, sizeof(*newPerson));
     strncpy(newPerson->name, name, NAME_SIZE);
     newPerson->tail = persons;
     *personsSize += 1;
     return newPerson;
-} 
-
-static tRelated *insertNewRelated(const char *name, tRelatedList related, size_t *relatedSize) {
-    tRelated *newRelated = calloc(1, sizeof(*newRelated));
-    newRelated->tail = related;
-    strncpy(newRelated->name, name, NAME_SIZE);
-    *relatedSize += 1;
-    return newRelated;
-} 
-
-static tPersonList addPersonRec(tPersonList persons, const char *name, size_t *personsSize) {
-  // Logica repetida, usar funcion
-  if (persons == NULL) 
-    return insertNewPerson(name, persons, personsSize);
-  int cmp = strcmp(persons->name, name);
-  if (cmp > 0)
-    return insertNewPerson(name, persons, personsSize);
+  }
   if (cmp < 0)
     persons->tail = addPersonRec(persons->tail, name, personsSize);
   return persons;
 }
 
 static tRelatedList addRelatedRec(tRelatedList related, const char *name, size_t *relatedSize) {
-  if (related == NULL)
-    return insertNewRelated(name, related, relatedSize);
-  int cmp = strcmp(related->name, name);
-  if (cmp > 0) 
-    return insertNewRelated(name, related, relatedSize);
+  int cmp;
+  if (related == NULL || (cmp = strcmp(related->name, name)) > 0) {
+    tRelated *newRelated = calloc(1, sizeof(*newRelated));
+    newRelated->tail = related;
+    strncpy(newRelated->name, name, NAME_SIZE);
+    *relatedSize += 1;
+    return newRelated;
+  }
   related->tail = addRelatedRec(related->tail, name, relatedSize);
   return related;
 }
