@@ -1,102 +1,100 @@
-#include <stdlib.h>
 #include "tp11_14.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define CHUNK 20;
 
 typedef struct node {
   elemType elem;
   struct node *nextAsc;
-  struct node *nextIn;
 } tNode;
 
- typedef tNode *tList;
+typedef tNode *tList;
 
 struct listCDT {
-  tList firstIn;
-  tNode *currentIn;
-  tList firstAsc;
+  tList listAsc;
   tNode *currentAsc;
-  compareFunc cmp; 
+  tNode **vecIn;
+  int currentInIdx;
+  size_t size;
+  size_t allocSize;
+  compareFunc cmp;
 };
 
-static void addRec(tList listAsc, elemType elem, compareFunc cmp);
-static void actualizeIn(tList listIn, tNode *node);
+static tNode *addAsc(tList listAsc, elemType elem, compareFunc cmp,
+                     tNode **addedNode);
+static void addIn(listADT list, tNode *node);
 
-listADT newList(int (*compare) (elemType e1, elemType e2)) {
+listADT newList(int (*compare)(elemType e1, elemType e2)) {
   listADT list = calloc(1, sizeof(*list));
+  list->currentInIdx = -1;
   list->cmp = compare;
   return list;
 }
 
 void add(listADT list, elemType elem) {
-  if (list->firstIn == NULL) {
-    tNode *newElem = malloc(sizeof(*newElem));
-    newElem->nextIn = newElem->nextAsc = NULL;
-    list->firstIn = list->firstAsc = newElem;
-    return;
-  }
-  addRec(list->firstAsc, elem, list->cmp);
+  tNode *addedNode;
+  list->listAsc = addAsc(list->listAsc, elem, list->cmp, &addedNode);
+  if (addedNode != NULL)
+    addIn(list, addedNode);
 }
-
 
 /* Elimina un elemento. */
-//void remove(listADT list, elemType elem);
+// void remove(listADT list, elemType elem);
 
-void toBegin(listADT list) {
-  list->currentIn = list->firstIn; 
-}
+void toBegin(listADT list) { list->currentInIdx = 0; }
 
 int hasNext(listADT list) {
-  return (list->currentIn != NULL && list->currentIn->nextIn != NULL);
+  return (list->currentInIdx != -1 && list->currentInIdx + 1 < list->size);
 }
 
 elemType next(listADT list) {
-  if (list->currentIn == NULL || list->currentIn->nextIn == NULL)
-    exit(1);
-  list->currentIn = list->currentIn->nextIn;
-  return list->currentIn->elem;
+  if (list->currentInIdx == -1 || list->currentInIdx >= list->size)
+    abort();
+  return list->vecIn[list->currentInIdx++]->elem;
 }
 
-void toBeginAsc(listADT list) {
-  list->currentAsc = list->firstAsc;
-}
+void toBeginAsc(listADT list) { list->currentAsc = list->listAsc; }
 
 int hasNextAsc(listADT list) {
-  return (list->currentAsc != NULL && list->currentAsc->nextIn != NULL);
+  return (list->currentAsc != NULL && list->currentAsc->nextAsc != NULL);
 }
 
 elemType nextAsc(listADT list) {
-  if (list->currentAsc == NULL || list->currentAsc->nextIn == NULL)
-    exit(1);
-  list->currentAsc = list->currentAsc->nextIn;
-  return list->currentAsc->elem;
+  if (list->currentAsc == NULL)
+    abort();
+  elemType toReturn = list->currentAsc->elem;
+  list->currentAsc = list->currentAsc->nextAsc;
+  return toReturn;
 }
 
 void freeList(listADT list) {
-  tNode *next;
-  for (tNode *current = list->currentAsc; current != NULL; current = next) {
-    next = current->nextIn;
-    free(current);
-  }
+  for (int i = 0; i < list->size; i++)
+    free(list->vecIn[i]);
+  free(list->vecIn);
   free(list);
 }
 
-static void addRec(tList listAsc, elemType elem, compareFunc cmp) {
-  tNode *next = listAsc->nextAsc;
+static tNode *addAsc(tList listAsc, elemType elem, compareFunc cmp,
+                     tNode **addedNode) {
   int comp;
-  if (next == NULL || (comp = cmp(next->elem, elem)) > 0) {
+  *addedNode = NULL;
+  if (listAsc == NULL || (comp = cmp(listAsc->elem, elem)) > 0) {
     tNode *newNode = malloc(sizeof(*newNode));
+    *addedNode = newNode;
     newNode->elem = elem;
-    newNode->nextAsc = next;
-    newNode->nextIn = NULL;
-    actualizeIn(listAsc, newNode); 
+    newNode->nextAsc = listAsc;
+    return newNode;
   }
   if (comp < 0)
-    addRec(listAsc->nextAsc, elem, cmp);
+    listAsc->nextAsc = addAsc(listAsc->nextAsc, elem, cmp, addedNode);
+  return listAsc;
 }
 
-static void actualizeIn(tList listIn, tNode *node) {
-  if(listIn->nextIn == NULL) {
-    listIn->nextIn = node;
-    return;
+static void addIn(listADT list, tNode *node) {
+  if (list->size == list->allocSize) {
+    list->allocSize += CHUNK;
+    list->vecIn = realloc(list->vecIn, list->allocSize * sizeof(*list->vecIn));
   }
-  actualizeIn(listIn->nextIn, node);
+  list->vecIn[list->size++] = node;
 }
