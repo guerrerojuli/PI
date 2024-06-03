@@ -17,12 +17,13 @@ typedef tPhrase *tPhraseList;
 struct phrasesCDT {
   size_t keyFrom;
   size_t keyTo;
+  size_t size;
   tPhraseList phraseList;
 };
 
 
 static void freePhraseList(tPhraseList phraseList);
-static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *phrase);
+static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *phrase, size_t *size);
 static char *getPhrase(tPhraseList phraseList, size_t key);
 
 
@@ -32,6 +33,7 @@ phrasesADT newPhrasesADT(size_t keyFrom, size_t keyTo) {
   phrasesADT phrases = malloc(sizeof(*phrases));
   phrases->keyFrom = keyFrom;
   phrases->keyTo = keyTo;
+  phrases->size = 0;
   phrases->phraseList = NULL;
   return phrases;
 }
@@ -44,7 +46,7 @@ void freePhrases(phrasesADT ph) {
 int put(phrasesADT ph, size_t key, const char *phrase) {
   if (!IS_BETWEEN(key, ph->keyFrom, ph->keyTo))
     return 0;
-  ph->phraseList = insertPhrase(ph->phraseList, key, phrase);
+  ph->phraseList = insertPhrase(ph->phraseList, key, phrase, &ph->size);
   return 1;
 }
 
@@ -54,10 +56,10 @@ char *get(const phrasesADT ph, size_t key) {
     return NULL;
   return phrase;
 }
-/*
- * Cantidad de frases almacenadas
- */
-size_t size(const phrasesADT ph);
+
+size_t size(const phrasesADT ph) {
+  return ph->size;
+}
 
 /*
  * Retorna un string con todas las frases concatenadas
@@ -81,13 +83,14 @@ static void freePhraseList(tPhraseList phraseList) {
   free(phraseList);
 }
 
-static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *phrase) {
-  if (phraseList == NULL || phraseList->key > key) {
+static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *phrase, size_t *size) {
+  if (phraseList == NULL || phraseList->key < key) {
     tPhrase *phraseNode = malloc(sizeof(*phraseNode));
     phraseNode->key = key;
     phraseNode->phrase = malloc((strlen(phrase) + 1) * sizeof(*phraseNode->phrase));
     strcpy(phraseNode->phrase, phrase);
     phraseNode->next = phraseList;
+    size += 1;
     return phraseNode;
   }
   if (phraseList->key == key) {
@@ -95,7 +98,7 @@ static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *
     strcpy(phraseList->phrase, phrase);
     return phraseList;
   }
-  phraseList->next = insertPhrase(phraseList->next, key, phrase);
+  phraseList->next = insertPhrase(phraseList->next, key, phrase, size);
   return phraseList;
 }
 
