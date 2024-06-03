@@ -1,13 +1,15 @@
 #include "tp11_16.h"
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 
-#define IS_BETWEEN(n, from, to) ((from) < (n) && (n) < (to))
+#define IS_BETWEEN(n, from, to) ((from) <= (n) && (n) <= (to))
 
 
 typedef struct node {
   char *phrase;
+  size_t phraseLen;
   size_t key;
   struct node *next;
 } tPhrase;
@@ -61,19 +63,30 @@ size_t size(const phrasesADT ph) {
   return ph->size;
 }
 
-/*
- * Retorna un string con todas las frases concatenadas
- * Si no hay frases retorna un string vacío
- */
-char *concatAll(const phrasesADT ph);
+char *concatAll(const phrasesADT ph) {
+  char *concat = calloc(1, sizeof(char));
+  size_t concatLen = 0;
+  for (tPhrase *current = ph->phraseList; current != NULL; current = current->next) {
+    concat = realloc(concat, (concatLen + current->phraseLen + 1) * sizeof(*concat));
+    strcat(concat + concatLen, current->phrase);
+    concatLen += current->phraseLen;
+  }
+  return concat;
+}
 
-/*
- * Retorna un string con todas las frases concatenadas cuyas claves estén entre
- * from y to inclusive. Si from o to son inválidas (están fuera del rango)
- * retorna NULL
- * Si no hay frases en ese rango, retorna un string vacío
- */
-char *concat(const phrasesADT ph, size_t from, size_t to);
+char *concat(const phrasesADT ph, size_t from, size_t to) {
+  if (!IS_BETWEEN(from, ph->keyFrom, ph->keyTo) || !IS_BETWEEN(to, ph->keyFrom, ph->keyTo))
+    return NULL;
+  char *concat = calloc(1, sizeof(char));
+  size_t concatLen = 0;
+  for (tPhrase *current = ph->phraseList; current != NULL && current->key <= to; current = current->next)
+    if (from <= current->key) {
+      concat = realloc(concat, (concatLen + current->phraseLen + 1) * sizeof(*concat));
+      strcat(concat + concatLen, current->phrase);
+      concatLen += current->phraseLen;
+    }
+  return concat;
+}
 
 static void freePhraseList(tPhraseList phraseList) {
   if (phraseList == NULL)
@@ -84,17 +97,19 @@ static void freePhraseList(tPhraseList phraseList) {
 }
 
 static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *phrase, size_t *size) {
-  if (phraseList == NULL || phraseList->key < key) {
+  if (phraseList == NULL || phraseList->key > key) {
     tPhrase *phraseNode = malloc(sizeof(*phraseNode));
     phraseNode->key = key;
-    phraseNode->phrase = malloc((strlen(phrase) + 1) * sizeof(*phraseNode->phrase));
+    phraseNode->phraseLen = strlen(phrase);
+    phraseNode->phrase = malloc((phraseNode->phraseLen + 1) * sizeof(*phraseNode->phrase));
     strcpy(phraseNode->phrase, phrase);
     phraseNode->next = phraseList;
-    size += 1;
+    *size += 1;
     return phraseNode;
   }
   if (phraseList->key == key) {
-    phraseList->phrase = realloc(phraseList->phrase, (strlen(phrase) + 1) * sizeof(*phraseList->phrase));
+    phraseList->phraseLen = strlen(phrase);
+    phraseList->phrase = realloc(phraseList->phrase, (phraseList->phraseLen + 1) * sizeof(*phraseList->phrase));
     strcpy(phraseList->phrase, phrase);
     return phraseList;
   }
@@ -103,10 +118,10 @@ static tPhraseList insertPhrase(tPhraseList phraseList, size_t key, const char *
 }
 
 static char *getPhrase(tPhraseList phraseList, size_t key) {
-  if (phraseList == NULL || phraseList->key < key)
+  if (phraseList == NULL || phraseList->key > key)
     return NULL;
   if (phraseList->key == key) {
-    char *phrase = malloc((strlen(phraseList->phrase) + 1) * sizeof(*phrase));
+    char *phrase = malloc((phraseList->phraseLen + 1) * sizeof(*phrase));
     return strcpy(phrase, phraseList->phrase);
   }
   return getPhrase(phraseList->next, key);
