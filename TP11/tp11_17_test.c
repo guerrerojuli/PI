@@ -18,6 +18,7 @@ main(void) {
     // de forma que se contabilizará a la ardilla en el bloque 2,1
     assert(countSquirrel(centralPark, 299, 120) == 1);
     // Se registra a otra ardilla en el mismo bloque que la invocación anterior
+    printf("%lu\n", squirrelsInBlock(centralPark, 201, 140));
     assert(countSquirrel(centralPark, 201, 140) == 2);
 
     // Se registra a una ardilla en el bloque 0,0

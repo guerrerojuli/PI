@@ -1,5 +1,7 @@
 #include "tp11_17.h"
 
+/* add nodes correctly */
+
 typedef struct fil {
   size_t coord;
   size_t count;
@@ -23,6 +25,8 @@ struct squirrelCensusCDT {
 
 
 tArea searchArea(tPark park, size_t nCol, size_t nFil);
+void freePark(tPark park);
+void freeAreas(tArea area);
 
 
 /**
@@ -64,7 +68,25 @@ size_t squirrelsInBlock(const squirrelCensusADT squirrelAdt, size_t yDistance, s
 /**
  * Libera los recursos utilizados para el conteo de ardillas en un parque
  */
-void freeSquirrelCensus(squirrelCensusADT squirrelAdt);
+void freeSquirrelCensus(squirrelCensusADT squirrelAdt) {
+  freePark(squirrelAdt->park);
+  free(squirrelAdt);
+}
+
+void freePark(tPark park) {
+  if (park == NULL)
+    return;
+  freePark(park->next);
+  freeAreas(park->fils);
+  free(park);
+}
+
+void freeAreas(tArea area) {
+  if (area == NULL)
+    return;
+  freeAreas(area->next);
+  free(area);
+}
 
 
 tCol *searchCol(tPark park, size_t nCol) {
